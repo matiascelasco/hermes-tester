@@ -2,12 +2,28 @@ package model;
 
 import java.util.Date;
 
+import annotations.Mock;
+import annotations.MockStringAttribute;
+import annotations.MockTodayAttribute;
+
+@Mock
 public class Notification {
+	
+	@MockStringAttribute({"Emociones", "Predeterminada", "Alimentos", "Actividades y paseos"})
 	private String category;
+	
+	@MockStringAttribute({"Alegre", "Molesto", "Entusiasmado"})
 	private String content;
+	
+	@MockStringAttribute({"Establo-Terapia", "Pista", "Hogar"})
 	private String context;
+	
+	@MockStringAttribute({"Bruce Wayner", "Dick Grayson", "Jimmy Olsen"})
 	private String kid;
+	
+	@MockTodayAttribute
 	private Date sent;
+	
 	public String getCategory() {
 		return category;
 	}
@@ -38,6 +54,4 @@ public class Notification {
 	public void setSent(Date sent) {
 		this.sent = sent;
 	}
-	
-	
 }
