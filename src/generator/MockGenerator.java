@@ -30,10 +30,8 @@ public class MockGenerator {
 				}
 				objects.add(obj);
 			}
-		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
-				| IllegalArgumentException | InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+			throw new RuntimeException(e);
 		}
 		return objects;
 	}
