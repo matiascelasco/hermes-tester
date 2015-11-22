@@ -1,4 +1,4 @@
-package utils;
+package serializers;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -7,7 +7,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-public class Converter {
+class Converter {
 
 	public static final DateTimeFormatter dateTimeFormatter = 
 			DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
