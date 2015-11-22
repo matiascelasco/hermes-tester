@@ -8,12 +8,17 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
+import annotations.Mock;
 import annotations.MockStringAttribute;
 import annotations.MockTodayAttribute;
 
 public class MockGenerator {
 	private static Random random = new Random();
 	public static <T> List<T> createMockInstances(Class<T> objClass, int amount) {
+		if (!objClass.isAnnotationPresent(Mock.class)){
+			throw new RuntimeException(String.format("'%s' class is not annotated with Mock", objClass.getName()));
+		}
+		
 		List<T> objects = new ArrayList<T>();
 		try {
 			Constructor<T> constructor = objClass.getConstructor();
