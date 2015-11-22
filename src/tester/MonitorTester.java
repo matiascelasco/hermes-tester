@@ -1,15 +1,15 @@
 package tester;
 
-import java.io.StringWriter;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import com.google.*;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
+import com.google.gson.Gson;
 import model.Notification;
 
 public class MonitorTester {
@@ -34,23 +34,40 @@ public class MonitorTester {
 		n2.setSent(new Date());		
 		
 		//creo una lista de notificaciones
-		List li = new ArrayList<Notification>();
+		ArrayList<Notification> li = new ArrayList<Notification>();
 		li.add(n1);
 		li.add(n2);
-		
-		JsonArray jsonArray = new JsonArray();
-		//JsonElement jel = Json
-		
-		//jsonArray.add(new JsonObject(n1));
-		
-								
-		System.out.println(jsonArray);
-		
-		/*for (int i = 0, size = jsonArray.length(); i < size; i++){
-			JSONObject objectInArray = jsonArray.getJSONObject(i);
-			System.out.println(objectInArray);
-		}*/
-		
+				
+		String gson = new Gson().toJson(li);
+		//escribe a un archivo
+		try{
+			File myFile = new File("test.txt");
+			myFile.createNewFile();
+			FileOutputStream fOut = new FileOutputStream(myFile);
+			OutputStreamWriter myOutWriter =new OutputStreamWriter(fOut);
+			myOutWriter.append(gson);
+			myOutWriter.close();
+			fOut.close();
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+		//lee desde el archivo
+		try{
+		File myFile = new File("test.txt");
+        FileInputStream fIn = new FileInputStream(myFile);
+        BufferedReader myReader = new BufferedReader(new InputStreamReader(fIn));
+        String aDataRow = "";
+        String aBuffer = ""; //Holds the text
+        while ((aDataRow = myReader.readLine()) != null) 
+        {
+            aBuffer += aDataRow ;
+        }
+        myReader.close();
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+		}
 		
 	}
 
