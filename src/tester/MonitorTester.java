@@ -2,44 +2,30 @@ package tester;
 
 import generator.MockGenerator;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 
-
-import annotations.Mock;
-
-import com.google.gson.JsonArray;
-
-
+import com.google.gson.Gson;
 import model.Notification;
 
 public class MonitorTester {
 
-	public static void main(String[] args) throws Exception {
-		List li = new ArrayList<Notification>();
-        for(Notification n: MockGenerator.createMockInstances(Notification.class, 3)){
-        	li.add(n);
-        }
+    public static void main(String[] args) throws IOException {
+		List<Notification> li = MockGenerator.createMockInstances(Notification.class, 40);
+
+		String gson = new Gson().toJson(li);
+		//TODO: no esta serializando bien la fecha (posible solución: http://www.studytrails.com/java/json/java-google-json-custom-serializer-deserializer.jsp)		
 		
-		JsonArray jsonArray = new JsonArray();
-		//JsonElement jel = Json
-		
-		//jsonArray.add(new JsonObject(n1));
-		
-								
-		System.out.println(jsonArray);
-		
-		/*for (int i = 0, size = jsonArray.length(); i < size; i++){
-			JSONObject objectInArray = jsonArray.getJSONObject(i);
-			System.out.println(objectInArray);
-		}*/
-		
-		
+		File myFile = new File("test.txt");
+		myFile.createNewFile();
+		FileOutputStream fOut = new FileOutputStream(myFile);
+		OutputStreamWriter myOutWriter =new OutputStreamWriter(fOut);
+		myOutWriter.append(gson);
+		myOutWriter.close();
+		fOut.close();
 	}
 
 }
