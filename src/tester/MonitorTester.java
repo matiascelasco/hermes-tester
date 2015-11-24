@@ -24,11 +24,15 @@ import model.Notification;
 public class MonitorTester {
 	
     public static void main(String[] args) throws ClientProtocolException, IOException, InterruptedException {
-		String postUrl = "http://localhost:8000/load-notifications";
+		
+    	String postUrl = "http://localhost:8000/load-notifications";
 		HttpClient client = HttpClientBuilder.create().build();
 		HttpPost post = new HttpPost(postUrl);
 		Random random = new Random();
-		for(int i = 0; i < 5; i++){
+		
+		int numSeries = 5;
+		System.out.format("\n%d series of random notifications will be generated:\n", numSeries);
+		for (int i = numSeries; i > 0; i--){
 			
 			System.out.println();
 			
@@ -61,8 +65,10 @@ public class MonitorTester {
 		    }
 			
 			// wait
-			System.out.println("Waiting 5 seconds before doing it again...");
-			Thread.sleep(5000);
+			if (numSeries > 1){
+				System.out.println("Waiting 5 seconds before doing it again...");
+				Thread.sleep(5000);
+			}
 		}
 	}
 
