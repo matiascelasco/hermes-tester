@@ -38,21 +38,24 @@ public class MonitorTester {
 			
 			// generate notifications
 			int amount = random.nextInt(20 - 5) + 5;  // random between 5 and 20
+			System.out.format("Generating %d random notifications... ", amount);
 			List<Notification> li = MockGenerator.createMockInstances(Notification.class, amount);
-			System.out.format("%d random notifications generated\n", amount);
-
+			System.out.println("Done");
+			
 			// serialize
-			System.out.println("Serializing...");
+			System.out.print("Serializing... ");
 			Gson gson = new GsonBuilder()
 				.registerTypeAdapter(Date.class, new DateSerializer())
 				.create();	
-			String jsonString = gson.toJson(li);	
+			String jsonString = gson.toJson(li);
+			System.out.println("Done");
 	    	
 			// sent to server
+			System.out.format("Sending JSON message to monitor at %s... ", postUrl);
 			post.setEntity(new StringEntity(jsonString));
 			post.setHeader("Content-type", "application/json");			
 			HttpResponse response = client.execute(post);
-			System.out.println("JSON message sent to monitor at " + postUrl);
+			System.out.println("Done");
 	
 			// read response and print to console
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
