@@ -21,24 +21,28 @@ public class MonitorTester {
 	
     public static void main(String[] args) {
     	try{
-    	int amount = new Random().nextInt(100 - 40) + 40;
-		List<Notification> li = MockGenerator.createMockInstances(Notification.class, amount);
+    		String postUrl="http://localhost:8000/load-notifications";
+    		HttpClient client = HttpClientBuilder.create().build();
+    		HttpPost post = new HttpPost(postUrl);
+    		//int amount = new Random().nextInt(100 - 40) + 40;
+    		for(int i=3; i<8; i++){
+    			List<Notification> li = MockGenerator.createMockInstances(Notification.class, i/*amount*/);
 
-		Gson gson = new GsonBuilder()
-			.registerTypeAdapter(Date.class, new DateSerializer())
-			.create();
+    			Gson gson = new GsonBuilder()
+    					.registerTypeAdapter(Date.class, new DateSerializer())
+    					.create();
 		
-		String jsonString = gson.toJson(li);			
+    			String jsonString = gson.toJson(li);			
+		    		
+    			StringEntity postingString =new StringEntity(jsonString);
+    			post.setEntity(postingString);
+    			System.out.println("Message to sent: "+postingString);
+    			//post.setHeader("Content-type", "application/json");			
+    			HttpResponse response = client.execute(post);
 		
-		String postUrl="http://localhost:8000/load-notifications";
-		HttpClient client = HttpClientBuilder.create().build();
-		HttpPost post = new HttpPost(postUrl);
-		StringEntity postingString =new StringEntity(jsonString);
-		post.setEntity(postingString);
-		//post.setHeader("Content-type", "application/json");			
-		HttpResponse response = client.execute(post);
-		
-		System.out.println(response.toString());
+    			System.out.println(response.toString());
+    			Thread.sleep(5000); 
+    		}
     	}
     	catch(Exception e){
     		System.out.println(e.getMessage());
