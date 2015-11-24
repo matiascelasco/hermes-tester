@@ -18,7 +18,7 @@ public class Notification {
 	@MockStringAttribute({"Establo-Terapia", "Pista", "Hogar"})
 	public String context;
 	
-	@MockStringAttribute({"Bruce Wayner", "Dick Grayson", "Jimmy Olsen"})
+	@MockStringAttribute({"Bruce Wayne", "Dick Grayson", "Jimmy Olsen"})
 	public String kid;
 	
 	@MockTodayAttribute
