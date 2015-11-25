@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ConnectException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +34,7 @@ public class MonitorTester {
 		Random random = new Random();
 		ArrayList<Notification> innerBuffer = new ArrayList<Notification>();
 		
-		int numSeries = 5;
+		int numSeries = 8;
 		System.out.format("\n%d series of random notifications will be generated:\n", numSeries);
 		for (int i = numSeries; i > 0; i--){
 			
@@ -74,7 +75,11 @@ public class MonitorTester {
 			}catch(ConnectException e){
 				System.out.println("there was an exception in the connection with the server");
 				System.out.println("Size of buffered notification = "+String.valueOf(innerBuffer.size()));
-			}											
+			}
+			catch(SocketException e){
+				System.out.println("the connection was reseted");
+				System.out.println("Size of buffered notification = "+String.valueOf(innerBuffer.size()));
+			}
 			// wait
 			System.out.println("Waiting 5 seconds before doing it again...");
 			Thread.sleep(5000);
