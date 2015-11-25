@@ -5,6 +5,8 @@ import generator.MockGenerator;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.ConnectException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -29,6 +31,7 @@ public class MonitorTester {
 		HttpClient client = HttpClientBuilder.create().build();
 		HttpPost post = new HttpPost(postUrl);
 		Random random = new Random();
+		ArrayList<Notification> innerBuffer = new ArrayList<Notification>();
 		
 		int numSeries = 5;
 		System.out.format("\n%d series of random notifications will be generated:\n", numSeries);
@@ -37,9 +40,10 @@ public class MonitorTester {
 			System.out.println();
 			
 			// generate notifications
-			int amount = random.nextInt(20 - 5) + 5;  // random between 5 and 20
+			int amount = random.nextInt(10 - 5) + 5;  // random between 5 and 10
 			System.out.format("Generating %d random notifications... ", amount);
-			List<Notification> li = MockGenerator.createMockInstances(Notification.class, amount);
+			List<Notification> list = MockGenerator.createMockInstances(Notification.class, amount);
+			innerBuffer.addAll(list);
 			System.out.println("Done");
 			
 			// serialize
@@ -47,32 +51,35 @@ public class MonitorTester {
 			Gson gson = new GsonBuilder()
 				.registerTypeAdapter(Date.class, new DateSerializer())
 				.create();	
-			String jsonString = gson.toJson(li);
+			String jsonString = gson.toJson(innerBuffer);
 			System.out.println("Done");
 	    	
 			// sent to server
 			System.out.format("Sending JSON message to monitor at %s... ", postUrl);
 			post.setEntity(new StringEntity(jsonString));
-			post.setHeader("Content-type", "application/json");			
-			HttpResponse response = client.execute(post);
-			System.out.println("Done");
-	
-			// read response and print to console
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-				response.getEntity().getContent()
-			));
-			System.out.println("Response from monitor:");
-			String line;
-			while ((line = reader.readLine()) != null) {
-		        System.out.println(line);
-		    }
-			
+			post.setHeader("Content-type", "application/json");
+			//catch possible exception
+			try{
+				HttpResponse response = client.execute(post);
+				// read response and print to console
+			  	BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+				System.out.println("Response from monitor:");
+				String line;
+				while ((line = reader.readLine()) != null) {
+			        System.out.println(line);
+			    }
+				System.out.println("Done");				
+				innerBuffer.clear();
+				System.out.println("Size of buffered notification = "+String.valueOf(innerBuffer.size()));
+			}catch(ConnectException e){
+				System.out.println("there was an exception in the connection with the server");
+				System.out.println("Size of buffered notification = "+String.valueOf(innerBuffer.size()));
+			}											
 			// wait
-			if (numSeries > 1){
-				System.out.println("Waiting 5 seconds before doing it again...");
-				Thread.sleep(5000);
-			}
-		}
+			System.out.println("Waiting 5 seconds before doing it again...");
+			Thread.sleep(5000);
+			
+		} //end for
 	}
 
 }
